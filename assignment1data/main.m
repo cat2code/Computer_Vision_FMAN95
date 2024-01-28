@@ -1,10 +1,9 @@
 % Assignment 1 
 % Written by Eliot M.P el6183mo-s
 % I hereby state that this is my own and original work
-
+close all;clearvars;clc;
 
 %% Points in Homogeneous Coordinates.
-close all;clearvars;clc;
 
 load compEx1.mat
 A2D = pflat(x2D);
