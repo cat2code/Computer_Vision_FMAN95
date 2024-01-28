@@ -31,6 +31,7 @@ plot(p1_no_Z(1,:),p1_no_Z(2,:),'-')
 plot(p2_no_Z(1,:),p2_no_Z(2,:),'-')
 plot(p3_no_Z(1,:),p3_no_Z(2,:),'-')
 
+legend('p3','p2','p1')
 
 % Solving nullspace of p1' finds parameters for the line going through the
 % pair of points in the plane in p1, p2 and p3.
