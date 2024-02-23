@@ -1,5 +1,5 @@
 % Assignment 1 
-% Written by Eliot M.P el6183mo-s
+% Written by Eliot Montesino Petrén el6183mo-s
 % I hereby state that this is my own and original work
 close all;clearvars;clc;
 
@@ -307,6 +307,41 @@ quiver3(center2(1),center2(2),center2(3),principal2(1),principal2(2),principal2(
 % have looked more nice...
 
 
+%% Optional stuff
+close all;clearvars;clc;
+
+im = imread('compEx5.JPG');
+load CompEx5.mat
+
+
+P1 = [eye(3) zeros(3,1)];
+%P2 = [R t]
+
+%% Plottinggg
+figure(1)
+imagesc(im)
+colormap gray
+hold on
+
+%Plots the cornerpoints and connects them with lines.
+plot(corners(1,[1:end 1]), corners(2,[1:end 1]),'*-'); 
+
+axis ij %Makes the y-axis point down (as in an image)
+
+
+
+%%
+
+tform = maketform('projective',Htot );
+%Creates a projective transformation that can be used in imtransform 
+%NOTE: Matlab uses the transposed version of the homografi.
+
+[new_im,xdata,ydata] = imtransform(im,tform,'size',size(im)); 
+%Creastes a transformed image (using tform)
+%of the same size as the original one.
+
+imagesc(xdata,ydata,new_im);
+%plots the new image with xdata and ydata on the axes
 
 
 
