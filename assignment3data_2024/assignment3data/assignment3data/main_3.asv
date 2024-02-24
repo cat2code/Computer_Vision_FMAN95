@@ -7,14 +7,14 @@ clearvars;close all;clc;
 load compEx1data.mat
 
 %%% plot images %%% 
-pic1 = "kronan1.jpg";
-figure('Name',pic1)
-im1 = imread(pic1); %Reads the imagefile with name in imfiles{i}
+pic = "kronan1.jpg";
+figure('Name',pic)
+im1 = imread(pic); %Reads the imagefile with name in imfiles{i}
 imagesc(im1)
 
-pic2 = "kronan2.jpg";
-figure('Name',pic2)
-im2 = imread(pic2); %Reads the imagefile with name in imfiles{i}
+pic = "kronan2.jpg";
+figure('Name',pic)
+im2 = imread(pic); %Reads the imagefile with name in imfiles{i}
 imagesc(im2)
 %%% --- %%%
 
@@ -42,7 +42,7 @@ x2 = N2*x2;
 
 % Save normalized x1, x2
 x1_tilde = x1;
-x2_tilde = x2;
+x
 
 %%% Form M-matrix %%%
 for i = 1:3
@@ -122,28 +122,12 @@ end
 %%% Answer
 % TODO: fix the epipolar constraints
 
-
 %%% Transform back to un-normalized F %%%
 F = N2'*Fn*N1;
 
 %Computes and plots all the epipolar constraints (should be roughly 0)
 l = F*x{1}; %Computes the epipolar lines
-l = l./sqrt(repmat(l(1,:).^2 + l(2,:).^2,[3 1]));
-
-% Pick 20 random points in the second image
-numPoints = 20;
-randIndices = randperm(size(x{2}, 2), numPoints);
-randPoints = x{2}(:, randIndices);
-
-% Plot the image and randomly selected points
-figure;
-imshow(pic2); % Assuming pic2 is the second image
-hold on;
-plot(randPoints(1, :), randPoints(2, :), 'r*');
-
-% Plot the corresponding epipolar lines
-rital(l(:, randIndices), pic1); % Assuming pic1 is the first image
-
+l = l./sqrt(repmat(l(1,:).^2 + l(2,:).^2,[3 1])); 
 
 %Makes sure that the line has a unit normal
 %(makes the distance formula easier) 
@@ -155,10 +139,10 @@ hist(abs(sum(l.*x{2})),100);
 
 
 %%% Answer
+
 F = F./F(3,3);
 save('F_matrix.mat', 'F');
 save('mean_epipolar_dist_F_not_normalized.mat','mean_epipolar_dist_F')
-save('mean_epipolar_dist_F_normalized.mat','mean_epipolar_dist_F')
 save('for_other_ex.mat','N1','N2',"x1_og","x2_og","x1tilde","x2tilde")
 
 %% No normalization attempt
