@@ -144,7 +144,7 @@ plot(randPoints(1, :), randPoints(2, :), 'r*');
 % Plot the corresponding epipolar lines
 rital(l(:, randIndices), pic1); % Assuming pic1 is the first image
 
-
+%
 %Makes sure that the line has a unit normal
 %(makes the distance formula easier) 
 
