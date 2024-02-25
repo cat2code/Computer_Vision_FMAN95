@@ -130,6 +130,9 @@ F = N2'*Fn*N1;
 l = F*x{1}; %Computes the epipolar lines
 l = l./sqrt(repmat(l(1,:).^2 + l(2,:).^2,[3 1]));
 
+lnn = Fn*x{1}; %Computes the epipolar lines
+lnn = lnn./sqrt(repmat(lnn(1,:).^2 + lnn(2,:).^2,[3 1]));
+
 % Pick 20 random points in the second image
 numPoints = 20;
 randIndices = randperm(size(x{2}, 2), numPoints);
@@ -148,36 +151,33 @@ rital(l(:, randIndices), pic1); % Assuming pic1 is the first image
 %Makes sure that the line has a unit normal
 %(makes the distance formula easier) 
 
+% Compute epipolar distances
+l_dist = abs(sum(l.*x{2}))
+lnn_dist = abs(sum(lnn.*x{2}))
+
 figure()
-hist(abs(sum(l.*x{2})),100);
+hist(l_dist,100);
 %Computes all the the distances between the
 %and there corresponding lines, and plots in a histogram
-
 
 %%% Answer
 F = F./F(3,3);
 save('F_matrix.mat', 'F');
+mean_epipolar_dist_F = mean(l_dist);
 save('mean_epipolar_dist_F_not_normalized.mat','mean_epipolar_dist_F')
-save('mean_epipolar_dist_F_normalized.mat','mean_epipolar_dist_F')
-save('for_other_ex.mat','N1','N2',"x1_og","x2_og","x1tilde","x2tilde")
-
-%% No normalization attempt
-
-N1 = eye(3);
-N2 = N1;
+mean_epipolar_dist_Fn = mean(lnn_dist);
+save('mean_epipolar_dist_F_normalized.mat','mean_epipolar_dist_Fn')
+save('for_next_ex.mat','N1','N2',"x1_og","x2_og","x1tilde","x2tilde")
 
 
-%save('mean_epipolar_dist_F_normalized.mat','mean_epipolar_dist_Fn')
 
 
 %% 2. 2 The Fundamental Matrix
 clearvars;close all;clc;
 %%% Computer Exercise 2 %%%
 
-
+load for_next_ex.mat
 load F_matrix.mat
-load for_other_ex.mat
-
 
 
 
@@ -249,30 +249,10 @@ table(check)        % It is 1!
 
 
 
+
 %% 3. The Essential Matrix
 %%% Computer Exercise 4. %%%
 clearvars;close all;clc;
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 

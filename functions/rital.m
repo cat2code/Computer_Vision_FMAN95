@@ -13,7 +13,7 @@ else
   punkter=pflat(cross(rikt,linjer));
   for i=1:nn;
    plot([punkter(1,i)-2000*rikt(1,i) punkter(1,i)+2000*rikt(1,i)], ...
-        [punkter(2,i)-2000*rikt(2,i) punkter(2,i)+2000*rikt(2,i)],'-');
+        [punkter(2,i)-2000*rikt(2,i) punkter(2,i)+2000*rikt(2,i)],st);
   end;
   slask=[];
 end;

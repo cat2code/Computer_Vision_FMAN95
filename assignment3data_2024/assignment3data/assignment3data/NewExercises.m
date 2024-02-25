@@ -33,7 +33,7 @@ for i = 1:size(points, 1)
 end
 
 
-%%% E2
+%% E2
 
 t1 = zeros(1,3)';
 P1 = [eye(3) t1];
@@ -79,7 +79,7 @@ disp(eT2F);
 disp('F e1:');
 disp(Fe1);
 
-%% Exercise 2.2
+%% E2.2
 % TODO: Do this on paper
 
 %For a general camera pair P1 = [I 0] and P2 = [A t]. Compute the epipoles, by projecting the camera centers. (You may assume that A is invertible.)
@@ -103,7 +103,7 @@ disp(e2);
 % Given the above result explain why the fundamental matrix has to have determinant 0.
 
 
-%% Exercise 3 
+%% E3
 
 % TODO: Do this on paper
 
@@ -116,6 +116,36 @@ N2 = [1/size(x2, 2) 0 -mean(x2(1, :)); 0 1/size(x2, 2) -mean(x2(2, :)); 0 0 1];
 
 % Compute the fundamental matrix F for the original (un-normalized) points
 F = N2' * F_tilde * N1;
+
+%% E4
+
+F = [0 1 1; 1 0 0; 0 1 1];
+
+% Define the 3D scene points
+X1 = [1; 2; 3];
+X2 = [3; 2; 1];
+X3 = [1; 0; 1];
+
+% Define the camera matrices
+P1 = [eye(3) zeros(3, 1)];
+P2 = [skew(e2) * F e2];
+
+% Compute the image projections
+x1 = P1 * [X1; 1];
+x2 = P2 * [X2; 1];
+x3 = P2 * [X3; 1];
+
+% Verify the epipolar constraint
+epipolar_constraint = x2' * F * x1;
+
+% Compute the camera center of P2
+C2 = -pinv(P2(:, 1:3)) * P2(:, 4);
+
+% Display the results
+disp('Epipolar constraint (xT2 Fx1):');
+disp(epipolar_constraint);
+disp('Camera center of P2:');
+disp(C2);
 
 
 %%% Done
