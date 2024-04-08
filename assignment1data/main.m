@@ -121,8 +121,13 @@ plot([startpoints(1,:); endpoints(1,:)], ...
 title("Original grid")
 axis equal
 
-H1 = [sqrt(3) -1 1;1 sqrt(3) 1; 0 0 2];
-H2 = [1 -1 1 ;1 1 0; 0 0 1];
+%H1 = [sqrt(3) -1 1;1 sqrt(3) 1; 0 0 2];
+%H2 = [1 -1 1 ;1 1 0; 0 0 1];
+
+% Define the matrices H1 and H2
+H1 = [1 0 0; 0 2 0; 0 0 1];
+H2 = [0 -1 -1; 0 -1 0; -1 2 0];
+
 H3 = [1 1 0; 0 2 0; 0 0 1];
 H4 = [sqrt(3) -1 1; 1 sqrt(3) 1; 1/4 1/2 2];
 

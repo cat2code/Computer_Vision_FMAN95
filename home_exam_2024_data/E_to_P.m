@@ -12,6 +12,6 @@ function P = E_to_P(E)
     P2_2 = [U*W*V'  -u3];
     P2_3 = [U*W'*V'  u3];
     P2_4 = [U*W'*V' -u3];
-    P = [P2_1, P2_2, P2_3, P2_4];
+    P = {P2_1, P2_2, P2_3, P2_4};
 end
 
