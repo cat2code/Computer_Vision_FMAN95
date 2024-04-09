@@ -1,25 +1,43 @@
-function [P_best, X_best] = selectVisible3DPointsDLT(P1, P2, x1, x2)
-    infront = [0,0,0,0];
-    X = {};
-    for i=1:size(P2)
-        for j=1:size(x1, 2)
-            M = [P1 -x1(:,j) zeros(3,1);
-            P2{i} zeros(3,1) -x2(:,j)];
-            [U,S,V] = svd(M);
-            v = V(:, end);
-            X{i}(1:4, j) = v(1:4);
+function [a,b] = selectVisible3DPointsDLT(P, data, x1_n, x2_n)
+    % automated comments with GPT, hope that is OK :)
+    % Initialize a counter for points in front of cameras for each configuration
+    count_front = [0,0,0,0];
+    
+    % Define the projection matrix for the first camera, assuming it's located at the origin
+    P1 = [eye(3) zeros(3,1)];
+    
+    % Initialize an empty array to store 3D points for each camera configuration
+    X =[];
+    
+    % Loop over the 4 possible camera configurations derived from the essential matrix decomposition
+    for i = 1:4
+        % Loop over each pair of corresponding points in the two images
+        for j = 1:size(data{1},2)
+            % Setup the matrix M for triangulation using DLT. This involves creating a system of equations that combines the projections from both cameras.
+            M = [P1 -x1_n(:,j) zeros(3,1);
+                 P{i} zeros(3,1) -x2_n(:,j)];
+            % Perform Singular Value Decomposition (SVD) on M to solve for the 3D point
+            [~,~,V] = svd(M);
+            % The 3D point is given by the last column of V (homogeneous coordinates)
+            v = V(:,end);
+            % Store the 3D point in an array
+            X{i}(1:4,j) = v(1:4,1);
             
-            d1 = projDepth(P1, v(1:4));
-            d2 = projDepth(P2{i}, v(1:4));
+            % Calculate the depth of the point relative to both camera centers. This involves checking the point's position along the camera's viewing direction.
+            d0 = depth(P1,v(1:4,1)); % Depth in the first camera
+            d1 = depth(P{i},v(1:4,1)); % Depth in the ith possible second camera
             
-            if sign(d1) > 0 & sign(d2) > 0 
-                infront(i) = infront(i) + 1;
-            end
+            % If the point is in front of both cameras (positive depth), increment the counter for visible points
+            if sign(d0)>0 && sign(d1)>0
+                count_front(i) = count_front(i)+1;
+            end 
         end
-        X{i} = pflat(X{i});
     end
-    [m,ind] = max(infront);
-    P_best = P2{ind};
-    X_best = X{ind};
+    
+    % Find the camera configuration with the maximum number of visible 3D points
+    [~,index] = max(count_front);
+    
+    % Return the best camera matrix (a) and its corresponding 3D points (b)
+    a = P{index};
+    b = X{index};
 end
-

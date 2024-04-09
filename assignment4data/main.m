@@ -63,7 +63,7 @@ figure, imshow(AB, 'XData', Rout.XWorldLimits, 'YData', Rout.YWorldLimits);
 title('Stitched Image');
 
 
-%% CE2 - Robust Essential Matrix Estimation
+%% CE2 - Robust Essential Matrix Estimation (STABLE NOW)
 clearvars;close all;
 % Setup
 addpath('../assignment4data', 'vlfeat-0.9.21/toolbox');
@@ -136,45 +136,43 @@ for i=1:100
 end
 disp("Found total of inliers = " + nbest_inls);
 
-% Extract camera matrices
-P1 = [eye(3) zeros(3, 1)];
+%%% Best inliers and their indices found, continue
+
+P1 = K*[eye(3) zeros(3,1)];
+
+% Extracting possible cameras from the essential matrix E
 P2 = E_to_P(best_E);
 
-% Ensure points are in front of the cameras.
-[P2_best, X_best] = selectVisible3DPointsDLT(P1, P2, x1_n, x2_n);
+% Choose solution (camera) with the most points in front of them
+[P2_best, X] = selectVisible3DPointsDLT(P2, x, x1_n, x2_n);
 
-% K-Unnormalize
-P1 = K * P1;
+% K-transform P_best
 P2_best = K * P2_best;
 
-% Normalize against homogenous so that they are 1
-X_best = pflat(X_best, 0);
-
-% Filter matches and 3D points to only include inliers.
-x = {x{1}(:,best_inls == 1), x{2}(:, best_inls == 1)};
-X_best = X_best(:, best_inls == 1);
+% Prepare for plots
+x = {x{1}(:,best_inls==1),x{2}(:,best_inls==1)};
+X = pflat(X,0);
+X = X(:,best_inls==1);
 
 % Compute reprojection errors and RMS
-[err, res] = ComputeReprojectionError({P1, P2_best}, X_best, x);
+[err, res] = ComputeReprojectionError({P1, P2_best}, X, x);
 RMS = sqrt(err / size(res, 2));
 disp(['RMS: ', num2str(RMS)])
 
-% Plot error in hist
 figure()
 hist(res,100)
 title('Error histogram')
 
-% Plot 3D points and camera centers
 figure()
-plot3(X_best(1,:), X_best(2,:), X_best(3,:), '.', 'Markersize', 2.5)
+plot3(X(1,:),X(2,:),X(3,:),'.','Markersize',3)
 axis equal
 hold on
-plotcams({P1, P2_best})
+plotcams({P2_best,P1})
 
-% Save results
 P2 = P2_best;
-X = X_best;
+
 save('ce2_results', 'P1', 'P2', 'X', 'x');
+
 
 %% CE3 - Calibrated Structure from Motion and Local Optimization
 clearvars;close all;
