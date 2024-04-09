@@ -14,46 +14,33 @@ title("3D cartesian coordinates transformation")
 %% Lines 
 close all;clearvars;clc;
 
-im = imread('compEx2.JPG');
-
 figure(1)
+set(1,'DefaultLineLineWidth',1)
+im = imread('compEx2.JPG');
 imagesc(im)
 colormap gray
 hold on
 
 load compEx2.mat
-p1_no_Z = p1(1:2,:);
-p2_no_Z = p2(1:2,:);
-p3_no_Z = p3(1:2,:);
 
 %Plotting lines traditionally to verify
-plot(p1_no_Z(1,:),p1_no_Z(2,:),'-')
-plot(p2_no_Z(1,:),p2_no_Z(2,:),'-')
-plot(p3_no_Z(1,:),p3_no_Z(2,:),'-')
-
-legend('p3','p2','p1')
+plot(p1(1,1:2),p1(2,1:2), 'LineWidth', 3);
+plot(p2(1,1:2),p2(2,1:2), 'LineWidth', 3);
+plot(p3(1,1:2),p3(2,1:2), 'LineWidth', 3);
 
 % Solving nullspace of p1' finds parameters for the line going through the
 % pair of points in the plane in p1, p2 and p3.
-p1_intersect_line = null(p1');
-p2_intersect_line = null(p2');
-p3_intersect_line = null(p3');
-
-p1_intersect_line(2) = -p1_intersect_line(2);
-p2_intersect_line(2) = -p2_intersect_line(2);
-p3_intersect_line(2) = -p3_intersect_line(2);
+% The null space of two homogenous coordinates finds the lines that intersects
+% the corresponding ones in cartesian coordinates.
+all_lines=[null(p1') null(p2') null(p3')];
+rital(all_lines)
+legend('p3','p2','p1','p3','p2','p1', 'intersection')
 
 
-% Store in one matrix
-P = [p1_intersect_line p2_intersect_line p3_intersect_line];
 
-
-% PLOT WITH RITAL
-% Rital was unclear how to use I found :( had to add "hold on" in the 
-% function's code
-rital(P)        % They all intersect
-hold on;
-
+% Find intersection with nullspace again
+intersection = pflat(null([all_lines(:,2) all_lines(:,3)]'),0);
+plot(intersection(1,1),intersection(2,1),'y*')
 
 %Answer: 
 % The lines are not parallell, they all intersect. They intersect close to
@@ -65,28 +52,15 @@ hold on;
 % What is interesting is that they are still enough parallel-alike to 
 % almost intersect in the same point.
 
-% Calculate intersection point bewteen p2 and p3 lines
-p2_p3_point = null([p2_intersect_line p3_intersect_line]');
-p2_p3_point = p2_p3_point./p2_p3_point(3);
 
-p2_p3_point_c = p2_p3_point(1:2);        % Intersection point in cartesian
-
-x1 = p2_p3_point_c(1);
-x2 = p2_p3_point_c(2);
-
-plot(x1,x2,'*')
-legend('p1','p2','p3','intersection p2 p3');
-
-% Calculate distance between intersection point and p1 line
-a = p1_intersect_line(1);
-b = p1_intersect_line(2);
-c = p1_intersect_line(3);
-
-d = abs(a*x1 + b*x2 + c)/sqrt(a^2 + b^2); % d = 8.1950
-save('distance','d')
+% Calculate distance
+distance = abs(all_lines(:,1)'*intersection)/hypot(all_lines(1,1),all_lines(2,1))
+%distance = abs(a*x1 + b*x2 + c)/sqrt(a^2 + b^2); % d = 8.1950
+save('distance','distance')
 
 % Answer: Distinctly not zero. The distance is relatively small though.
 % This ties into the discussion above. 
+
 
 %% Projective Transformations
 close all;clearvars;clc;
@@ -310,6 +284,26 @@ quiver3(center2(1),center2(2),center2(3),principal2(1),principal2(2),principal2(
 % the images. The same goes for the angle. Very cool!
 % The plot could be improved so that the statue is vertical, that would
 % have looked more nice...
+
+
+% Correction: Adding the 3D points projected in camera 1 and camera 2
+U1 = pflat(P1*U, 0);
+U2 = pflat(P2*U, 0);
+
+%plot of the transformations together with the images
+figure(1)
+imagesc(im1)
+colormap gray
+hold on
+plot(U1(1,:),U1(2,:),'.','MarkerSize',2)
+
+
+figure(2)
+imagesc(im2)
+colormap gray
+hold on
+plot(U2(1,:),U2(2,:),'.','MarkerSize',2)
+
 
 
 %% Optional stuff

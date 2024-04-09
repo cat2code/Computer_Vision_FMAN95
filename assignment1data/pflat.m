@@ -30,7 +30,7 @@ Z = X(end, :);
 
 % Element-wise division to convert to cartesian coordinates
 A = X ./ Z;
-
+hold on; 
 % Check if plotting is requested
 if makeplot == 1
     % Create a new figure
@@ -48,5 +48,5 @@ if makeplot == 1
     % Ensure equal scaling of axes
     axis equal;
 end
-
+hold on;
 end
