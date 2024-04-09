@@ -4,7 +4,7 @@ function [P_best, X_best] = selectVisible3DPointsDLT(P1, P2, x1, x2)
     for i=1:size(P2)
         for j=1:size(x1, 2)
             M = [P1 -x1(:,j) zeros(3,1);
-                P2{i} zeros(3,1) -x2(:,j)];
+            P2{i} zeros(3,1) -x2(:,j)];
             [U,S,V] = svd(M);
             v = V(:, end);
             X{i}(1:4, j) = v(1:4);
